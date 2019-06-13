@@ -7,23 +7,49 @@
  */
 
 import React, {Component} from 'react';
-import {Platform, StyleSheet, Text, View} from 'react-native';
+import {StyleSheet, View, Image} from 'react-native';
+import {connect} from 'react-redux';
 
-const instructions = Platform.select({
-  ios: 'Press Cmd+R to reload,\n' + 'Cmd+D or shake for dev menu',
-  android:
-    'Double tap R on your keyboard to reload,\n' +
-    'Shake or press menu button for dev menu',
-});
+import ListItem from './src/components/ListItem';
+import UserInput from './src/components/UserInput';
+import ModalDetail from './src/components/ModalDetail';
+import {addPlace, deletePlace, selectPlace, deselectPlace} from './src/store/actions/index';
+//import * as url from './src/Capture.PNG'
 
-type Props = {};
-export default class App extends Component<Props> {
+class App extends Component {
+
+  placeAddedHandler = placeName => {
+    this.props.onAddPlace(placeName);
+  };
+  
+  placeSelectedHandler = key => {
+    this.props.onSelectPlace(key);
+  };
+
+  placeDeleteHandler = () =>{
+    this.props.onDeletePlace();
+  }
+
+  closeModalHandler = () =>{
+    this.props.onDeselectPlace();
+  }
+
   render() {
     return (
       <View style={styles.container}>
-        <Text style={styles.welcome}>Welcome to React Native!</Text>
-        <Text style={styles.instructions}>To get started, edit App.js</Text>
-        <Text style={styles.instructions}>{instructions}</Text>
+        <UserInput 
+          onPlaceAdded={this.placeAddedHandler}
+        />
+        <ModalDetail 
+          selectedPlace = {this.props.selectedPlace}
+          onItemDeleted = {this.placeDeleteHandler}
+          onModalClose = {this.closeModalHandler}
+        />
+        <ListItem
+          style = {styles.listItem}
+          places = {this.props.places}
+          onItemSeleted = {this.placeSelectedHandler}
+        />
       </View>
     );
   }
@@ -32,18 +58,27 @@ export default class App extends Component<Props> {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'center',
+    justifyContent: 'flex-start',
     alignItems: 'center',
     backgroundColor: '#F5FCFF',
+    paddingHorizontal:20,
   },
-  welcome: {
-    fontSize: 20,
-    textAlign: 'center',
-    margin: 10,
-  },
-  instructions: {
-    textAlign: 'center',
-    color: '#333333',
-    marginBottom: 5,
-  },
+
 });
+const mapStateToProps = store => {
+  return {
+    places: store.places.places,
+    selectedPlace:store.places.selectedPlace
+  }
+
+}
+const mapDispatchToProps = dispatch => {
+  return {
+    onAddPlace: (name) => dispatch(addPlace(name)),
+    onDeletePlace: () => dispatch(deletePlace()),
+    onSelectPlace: (key) => dispatch(selectPlace(key)),
+    onDeselectPlace:() => dispatch(deselectPlace())
+  }
+
+}
+export default connect (mapStateToProps,mapDispatchToProps)(App);
