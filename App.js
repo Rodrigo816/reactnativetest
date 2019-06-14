@@ -1,3 +1,43 @@
+import React, {Component} from 'react';
+import { createStackNavigator,createBottomTabNavigator, createAppContainer } from "react-navigation";
+import { Provider } from 'react-redux';
+import AuthScreen from './src/screens/Auth';
+import FindPlace from './src/screens/FindPlace';
+import SharePlace from './src/screens/SharePlace';
+import ViewPlace from './src/screens/ViewPlace';
+import configureStore from './src/store/configureStore';
+
+//Create Store
+const store = configureStore();
+
+//Create Stack navegation
+const StackNavegation = createStackNavigator({
+  Home: AuthScreen,
+  FindPlace: FindPlace,
+  SharePlace: SharePlace,
+  ViewPlace:ViewPlace
+});
+
+//Create Tab navegation
+const TabNavigator = createBottomTabNavigator({
+  Home: StackNavegation,
+  FindPlace: StackNavegation,
+  SharePlace: StackNavegation,
+});
+
+//Create Root Container navegation
+const AppContainer = createAppContainer(TabNavigator);
+
+class App extends React.Component {
+  render() {
+    return (
+      <Provider store={store}>
+        <AppContainer />
+      </Provider>
+    );
+  }
+}
+export default App;
 /**
  * Sample React Native App
  * https://github.com/facebook/react-native
@@ -6,7 +46,7 @@
  * @flow
  */
 
-import React, {Component} from 'react';
+/*import React, {Component} from 'react';
 import {StyleSheet, View, Image} from 'react-native';
 import {connect} from 'react-redux';
 
@@ -81,4 +121,4 @@ const mapDispatchToProps = dispatch => {
   }
 
 }
-export default connect (mapStateToProps,mapDispatchToProps)(App);
+export default connect (mapStateToProps,mapDispatchToProps)(App);*/
