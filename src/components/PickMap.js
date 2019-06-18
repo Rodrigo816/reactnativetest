@@ -1,20 +1,25 @@
 import React, {Component} from 'react';
-import {StyleSheet, View, Text, Button} from 'react-native';
+import {StyleSheet, View, Text, Button, Dimensions} from 'react-native';
+import MapView from "react-native-maps";
 
 class PickMap extends Component {
   state = {
-    placeName: ""
+    focusedLocation: {
+      latitude: 38.732633,
+      longitude: -27.068202,
+      latitudeDelta: 0.0122,
+      longitudeDelta:Dimensions.get("window").width / Dimensions.get("window").height *  0.0122
+    }
   };
-
-
 
   
   render() {
     return (
       <View style={styles.container}>
-        <View style={styles.placeholder}>
-          <Text>GoogleMap</Text>
-        </View>
+        <MapView
+          initialRegion={this.state.focusedLocation}
+          style={}>
+        </MapView>
         <View style={styles.button}>
           <Button title="Locate Me" onPress={() => alert("mapa")}/>
         </View>
@@ -23,10 +28,7 @@ class PickMap extends Component {
   }
 }
 const styles = StyleSheet.create({
-  placeholder: {
-    borderWidth: 1,
-    borderColor: "black",
-    backgroundColor: "#eee",
+  map: {
     height:150,
     width: '80%'
   },
