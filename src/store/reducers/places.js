@@ -12,8 +12,9 @@ const reducer = (state=initialState, action) => {
           key:Math.random(), 
           value: action.payload,
           image: {
-            url:"https://www.google.pt/images/branding/googlelogo/1x/googlelogo_color_272x92dp.png"
-          }
+            url:action.image
+          },
+          location: action.location,
         })
       }
     case DELETE_PLACE:

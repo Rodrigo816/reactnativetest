@@ -11,16 +11,46 @@ import HeadingText from "../components/UI/HeadingText";
 
 class SharePlace extends Component {
   state = {
-    placeName: ""
+    placeName: "",
+    location: {
+      value:null,
+      valid: false
+    },
+    image:{
+      uri: null,
+      valid: false
+    }
   };
   placeNameChangedHandler = val => {
     this.setState({
       placeName: val
     });
   };
+  locationPickedHandler = location => {
+    this.setState(prev => {
+      return {
+        ...this.state,
+        location: {
+          value: location,
+          valid: true
+        }
+      }
+    })
+  }
+  pickImageHangler = image => {
+    this.setState(prev => {
+      return {
+        ...this.state,
+        image: {
+          uri: image,
+          valid: true
+        }
+      }
+    })
+  }
   placeAddedHandler = () => {
     if (this.state.placeName.trim() !== ""){
-      this.props.onAddPlaceComBatatas(this.state.placeName);
+      this.props.onAddPlaceComBatatas(this.state.placeName, this.state.location.value, this.state.image.uri);
     }
   }
   render(){
@@ -30,8 +60,8 @@ class SharePlace extends Component {
           <MainText>
             <HeadingText>Share a plce with us!</HeadingText>
           </MainText>
-          <PickImage/>
-          <PickMap/>
+          <PickImage onImagePick={this.pickImageHangler}/>
+          <PickMap onLocationPick={this.locationPickedHandler}/>
           <UserInput 
             placeName={this.state.placeName}
             onChangeText={this.placeNameChangedHandler}
@@ -67,7 +97,7 @@ const styles = StyleSheet.create({
 });
 const mapDispatchToProps = dispatch => {
   return{
-    onAddPlaceComBatatas: (name) => dispatch(addPlace(name))
+    onAddPlaceComBatatas: (name, location, image) => dispatch(addPlace(name, location,image))
   }
 }
 export default connect(null, mapDispatchToProps)(SharePlace);

@@ -1,23 +1,41 @@
 import React, {Component} from 'react';
 import {StyleSheet, View, Image, Button} from 'react-native';
+import ImagePicker from "react-native-image-picker"
 
 
 class PickImage extends Component {
   state = {
-    placeName: ""
+    pickedImage: null
   };
 
 
-
+  pickImageHandler = () => {
+    ImagePicker.showImagePicker({
+      title: "Seleciona uma imagem"
+    }, response => {
+      if(response.didCancel){
+        console.log("user cancel");
+      } else if (response.error){
+        console.log("erro erro");
+      } else {
+        this.setState({
+          pickedImage: {
+            uri:response.uri
+          }
+        });
+        this.props.onImagePick(response.uri);
+      }
+    });
+  }
   
   render() {
     return (
       <View style={styles.container}>
         <View style={styles.placeholder}>
-          <Image style={styles.previewImage} source={{uri:'https://facebook.github.io/react/logo-og.png'}}/>
+          <Image style={styles.previewImage} source={this.state.pickedImage}/>
         </View>
         <View style={styles.button}>
-          <Button title="Pick Imddddddddddage" onPress={() => alert("pick AA")}/>
+          <Button title="Pick Imddddddddddage" onPress={this.pickImageHandler}/>
         </View>
       </View>
     ) 
